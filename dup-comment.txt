@@ -1,0 +1,28 @@
+Bytecode-Sequenz für DUP:
+
+1000 ! @ 1000 @
+
+Erklärung der Mechanik
+
+1000:
+Der Wert in SR0/SR1 wird durch die Schieberegister-Mechanik automatisch nach SR2/SR3 verschoben.
+Jetzt enthält SR0/SR1 die Adresse 0x1000.
+
+!:
+Speichert den aktuellen Wert von SR2/SR3 (ursprünglich SR0/SR1, der zu kopierende Wert) an die Adresse 0x1000, auf die SR0/SR1 zeigt.
+@:
+
+Lädt den Wert von der Adresse 0x1000 in SR0/SR1.
+
+1000:
+Die Adresse 0x1000 wird erneut in SR0/SR1 geladen, um darauf zuzugreifen.
+Durch die Schieberegister-Mechanik wird der Wert, der zuvor in SR0/SR1 war, nach SR2/SR3 verschoben.
+
+@:
+Lädt den Wert von der Adresse 0x1000 in SR0/SR1. Der ursprüngliche Wert in SR0/SR1 wird jetzt nach SR2/SR3 verschoben.
+
+Fazit
+Die Bytecode-Sequenz funktioniert durch die Schieberegister-Mechanik, indem der zu kopierende Wert zweimal durch den Speicher geschrieben und dann erneut in die Register geladen wird. Dies gewährleistet, dass der ursprüngliche Wert von SR0/SR1 am Ende korrekt in SR2/SR3 landet.
+
+
+
