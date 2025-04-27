@@ -4,15 +4,21 @@
 ; Alle 3 Sprachkonstrukte werden bereits im Compiler behandelt. Sie finden sich anschließend nicht mehr im generierten Bytecode wieder.
 ; Die drei Sprachkonstrukte werden über eine gemeinsame Tabelle realisiert. Die Tabelle beginnt mit *. In der Tabelle steht der Name, gefolgt von '(' und dann einer Zeichenfolge, gefolgt von ')'.
 ; Beispiele (Variable dstack, Sprungziel mainloop, Makro dpush):
-; *dstack(1200)mainloop(1638)dpush((dstack)@!0002+1200!)
+; *=dstack($1200):mainloop($1638)#dpush((dstack)@!$0002+$1200!)
 ; Variablen werden im Code über folgende Syntax eingeführt:
-; =dstack(1200)
+; =dstack($1200)
 ; Sprungziele werden wie folgt definiert:
-; =mainloop:
+; :mainloop
 ; Makros werden über # definiert:
-; #dpush((dstack)@!0002+1200!)
-; Variablen, Sprungziele und Makros werden im Code abgerufen, in dem sie in Klammern gesetzt werden. In einem Makro dürfen andere Makros verwendet werden.
-; Makros müssen zuerst aufgelöst werden, da sich dadurch der Code verschiebt und sich die Adressen für Sprungzielen verändern. Deshalb werden Makros über #(Makroname) aufgerufen, um sie von Variablen und Sprungzielen zu unterscheiden.
-: Die Auflösung von Variablen, Sprungzielen und Makros erfolgt iterativ über den gesamten Sourcecode: bei jedem Durchlauf werden die in Klammern eingeschlossenen Namen durch den Code in der Tabelle ersetzt. Dies geschieht so oft, bis keine Klammern mehr im Code auftreten. Zuerst werden dabei nur Makros ersetzt, bis keine Makros mehr im Code vorkommen. Danach werden die Adressen der Sprungziele in die Tabelle eingetragen und zuletzt die Variablen in der Tabelle abgelegt.
+; #dpush(dstack @!$0002+$1200!)
+; Variablen, Sprungziele und Makros werden im Code abgerufen, in dem ihr Name geschrieben wird. In einem Makro dürfen andere Makros verwendet werden.
+; Um Namen und Zahlen voneinander unterscheiden zu können, muss Zahlen ein $ vorangestellt werden.
+; Dies gilt nur für den Compiler. Im generierten Bytecode werden die $-Zeichen wieder entfernt.
+; Sprungziele werden zuletzt aufgelöst, da sich durch Makros der Code verschiebt und sich die Adressen für Sprungziele verändern.
+: Die Auflösung von Variablen, Sprungzielen und Makros erfolgt iterativ über den gesamten Sourcecode: bei jedem Durchlauf werden die Namen durch den Code in der Tabelle ersetzt, solange, bis alle Namen ersetzt wurden.
 
 
+=srcptr($120e)
+=ch($120c)
+#init($1500 srcptr !)
+#getch(srcptr @ ch ! srcptr @ $0001 + srcptr !)
